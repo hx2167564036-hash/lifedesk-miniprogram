@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "今天",
+  "usingComponents": {
+    "quick-add": "/components/quick-add/index",
+    "custom-tab-bar": "/custom-tab-bar/index"
+  }
+}

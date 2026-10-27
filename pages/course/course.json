@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "课程表",
+  "usingComponents": {
+    "custom-tab-bar": "/custom-tab-bar/index"
+  }
+}

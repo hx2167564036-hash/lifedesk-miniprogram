@@ -1,0 +1,87 @@
+<view class="page">
+  <!-- 预算 -->
+  <view class="card">
+    <view class="sec-head">
+      <text class="sec-label">BUDGET</text>
+      <text class="sec-title">本月预算</text>
+      <view class="sec-line"></view>
+      <input class="budget-input mono" type="digit" value="{{budget}}" bindblur="onBudgetInput" placeholder="0" />
+    </view>
+    <view class="budget-bar">
+      <view class="bb-fill" style="width: {{budgetPct}}%"></view>
+    </view>
+    <view class="budget-nums">
+      <text class="bn-out red mono">支出 ¥{{monthOut}}</text>
+      <text class="bn-in green mono">收入 ¥{{monthIn}}</text>
+      <text class="bn-left faint">剩余 ¥{{budgetLeft}}</text>
+    </view>
+  </view>
+
+  <!-- 录入表单 -->
+  <view class="card">
+    <view class="type-chips">
+      <view class="chip {{type === 'out' ? 'active' : ''}}" data-t="out" bindtap="onTypeTap">支出</view>
+      <view class="chip {{type === 'in' ? 'active' : ''}}" data-t="in" bindtap="onTypeTap">收入</view>
+    </view>
+    <view class="form-row">
+      <view class="fl">金额</view>
+      <input class="field mono amount-field" type="digit" value="{{amount}}" bindinput="onAmount" placeholder="0.00" />
+    </view>
+    <block wx:if="{{type === 'out'}}">
+      <view class="fl">分类</view>
+      <view class="cat-chips">
+        <view class="chip {{cat === c ? 'active' : ''}}" wx:for="{{cats}}" wx:for-item="c" wx:key="*this" data-c="{{c}}" bindtap="onCatTap">{{c}}</view>
+      </view>
+    </block>
+    <view class="form-row">
+      <view class="fl">备注（可选）</view>
+      <input class="field" value="{{note}}" bindinput="onNote" placeholder="食堂晚饭" maxlength="40" />
+    </view>
+    <view class="form-row">
+      <view class="fl">日期</view>
+      <picker mode="date" value="{{date}}" bindchange="onDateChange">
+        <view class="field mono">{{date}}</view>
+      </picker>
+    </view>
+    <button class="btn primary submit-btn" bindtap="onSubmit">记一笔</button>
+  </view>
+
+  <!-- 消费结构 -->
+  <view class="card" wx:if="{{catStats.length}}">
+    <view class="sec-head">
+      <text class="sec-label">STRUCTURE</text>
+      <text class="sec-title">本月消费结构</text>
+      <view class="sec-line"></view>
+    </view>
+    <view class="cs-row" wx:for="{{catStats}}" wx:for-item="c" wx:key="name">
+      <text class="cs-name">{{c.name}}</text>
+      <view class="cs-bar"><view class="cs-fill" style="width: {{c.pct}}%"></view></view>
+      <text class="cs-val mono">{{c.pct}}%</text>
+    </view>
+    <view class="cs-cmp">{{diffText}}（上月 ¥{{lastMonthOut}}）</view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="card">
+    <view class="sec-head">
+      <text class="sec-label">RECORDS</text>
+      <text class="sec-title">本月记录</text>
+      <view class="sec-line"></view>
+      <text class="sec-mini">{{records.length}} 笔</text>
+    </view>
+    <view class="filter-chips">
+      <view class="chip {{filter === 'all' ? 'active' : ''}}" data-f="all" bindtap="onFilterTap">全部</view>
+      <view class="chip {{filter === c ? 'active' : ''}}" wx:for="{{catStats}}" wx:for-item="c" wx:key="name" data-f="{{c.name}}" bindtap="onFilterTap">{{c.name}}</view>
+    </view>
+    <view class="ledger-row" wx:for="{{records}}" wx:for-item="r" wx:key="id">
+      <view class="lr-mid">
+        <view class="lr-note">{{r.note || r.cat}}</view>
+        <view class="lr-meta">{{r.cat}} · {{r.date}}</view>
+      </view>
+      <text class="lr-amt mono {{r.type === 'in' ? 'green' : 'red'}}">{{r.type === 'in' ? '+' : '-'}}¥{{r.amount}}</text>
+      <text class="lr-del" data-id="{{r.id}}" bindtap="onDel">×</text>
+    </view>
+    <view class="empty" wx:if="{{!records.length}}">本月还没有记录</view>
+  </view>
+  <custom-tab-bar />
+</view>

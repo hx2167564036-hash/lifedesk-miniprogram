@@ -1,0 +1,41 @@
+.page { padding-bottom: 200rpx; }
+
+.budget-input {
+  width: 140rpx;
+  text-align: right;
+  font-size: 28rpx;
+  background: #F6F2EA;
+  border-radius: 8rpx;
+  padding: 4rpx 12rpx;
+}
+.budget-bar {
+  height: 16rpx;
+  background: #EFEAE0;
+  border-radius: 999rpx;
+  overflow: hidden;
+  margin-bottom: 14rpx;
+}
+.bb-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C4553A, #A2402A);
+  border-radius: 999rpx;
+  transition: width 0.3s;
+}
+.budget-nums { display: flex; justify-content: space-between; font-size: 24rpx; }
+
+.type-chips, .cat-chips, .filter-chips { margin-bottom: 18rpx; }
+.amount-field { font-size: 40rpx; font-weight: 600; }
+.submit-btn { width: 100%; margin-top: 8rpx; }
+
+.cs-row { display: flex; align-items: center; padding: 10rpx 0; }
+.cs-name { width: 90rpx; font-size: 24rpx; }
+.cs-bar { flex: 1; height: 14rpx; background: #EFEAE0; border-radius: 999rpx; overflow: hidden; margin: 0 16rpx; }
+.cs-fill { height: 100%; background: #A2402A; border-radius: 999rpx; }
+.cs-val { width: 70rpx; text-align: right; font-size: 22rpx; color: #6B6357; }
+.cs-cmp { font-size: 21rpx; color: #6B6357; margin-top: 12rpx; }
+
+.lr-mid { flex: 1; }
+.lr-note { font-size: 26rpx; }
+.lr-meta { font-size: 20rpx; color: #9A917F; margin-top: 2rpx; }
+.lr-amt { font-size: 28rpx; font-weight: 600; margin-right: 16rpx; }
+.lr-del { font-size: 32rpx; color: #C9C2B4; padding: 0 8rpx; }

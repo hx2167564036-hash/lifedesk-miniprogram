@@ -1,0 +1,12 @@
+<view class="tabbar">
+  <view
+    wx:for="{{list}}"
+    wx:key="text"
+    class="tab-item {{selected === index ? 'on' : ''}}"
+    data-url="{{item.url}}"
+    bindtap="onTap"
+  >
+    <text class="tab-text">{{item.text}}</text>
+    <view class="tab-dot" wx:if="{{selected === index}}"></view>
+  </view>
+</view>

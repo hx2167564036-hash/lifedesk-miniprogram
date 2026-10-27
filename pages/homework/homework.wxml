@@ -1,0 +1,76 @@
+<view class="page">
+  <!-- 统计条 -->
+  <view class="stat-strip">
+    <view class="ss-item">
+      <text class="ss-num mono">{{pending}}</text>
+      <text class="ss-cap">待交</text>
+    </view>
+    <view class="ss-div"></view>
+    <view class="ss-item">
+      <text class="ss-num mono danger">{{overdueCount}}</text>
+      <text class="ss-cap">已逾期</text>
+    </view>
+    <view class="ss-div"></view>
+    <view class="ss-item">
+      <text class="ss-num mono">{{nearest}}</text>
+      <text class="ss-cap">最近截止</text>
+    </view>
+  </view>
+
+  <!-- 筛选 -->
+  <view class="filter-row">
+    <view class="chip {{filter === 'todo' ? 'active' : ''}}" data-f="todo" bindtap="onFilterTap">未完成</view>
+    <view class="chip {{filter === 'done' ? 'active' : ''}}" data-f="done" bindtap="onFilterTap">已完成</view>
+    <view class="chip {{filter === 'all' ? 'active' : ''}}" data-f="all" bindtap="onFilterTap">全部</view>
+  </view>
+
+  <!-- 作业列表 -->
+  <view class="hw-list" wx:if="{{list.length}}">
+    <view class="hw-row" wx:for="{{list}}" wx:key="id">
+      <view class="hw-check {{item.done ? 'on' : ''}}" data-id="{{item.id}}" bindtap="onToggle">
+        <text wx:if="{{item.done}}">✓</text>
+      </view>
+      <view class="hw-main">
+        <text class="hw-title {{item.done ? 'done' : ''}}">{{item.title}}</text>
+        <text class="hw-sub">{{item.courseName}} · 截止 {{item.deadline}}</text>
+      </view>
+      <view class="hw-right">
+        <text class="hw-stamp {{item.stampCls}}">{{item.stampText}}</text>
+        <text class="hw-del" data-id="{{item.id}}" bindtap="onDel">删除</text>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:else>没有作业，享受空白</view>
+
+  <button class="btn add-btn" bindtap="showAdd">+ 添加作业</button>
+
+  <!-- 添加弹层 -->
+  <view class="mask" wx:if="{{addVisible}}" bindtap="hideAdd">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">添加作业</view>
+      <view class="form-row">
+        <view class="fl">作业标题</view>
+        <input class="field" value="{{form.title}}" data-key="title" bindinput="onFormInput" placeholder="高数 第 3 章习题" maxlength="40" />
+      </view>
+      <view class="form-row">
+        <view class="fl">关联课程</view>
+        <picker range="{{courseNames}}" value="{{courseIdx}}" bindchange="onCourseChange">
+          <view class="field">{{courseNames.length ? courseNames[courseIdx] : '暂无课程'}}</view>
+        </picker>
+      </view>
+      <view class="form-row">
+        <view class="fl">截止日期</view>
+        <picker mode="date" value="{{form.date}}" bindchange="onDateChange">
+          <view class="field mono">{{form.date}}</view>
+        </picker>
+      </view>
+      <view class="form-row">
+        <view class="fl">截止时间</view>
+        <input class="field mono" value="{{form.time}}" data-key="time" bindinput="onFormInput" placeholder="23:59" maxlength="5" />
+      </view>
+      <view class="sheet-ops">
+        <button class="btn primary" bindtap="saveHw">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

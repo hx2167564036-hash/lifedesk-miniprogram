@@ -1,0 +1,69 @@
+<view class="page">
+  <!-- 摘要 -->
+  <view class="stat-strip">
+    <view class="ss-item">
+      <text class="ss-num mono">{{todoCount}}</text>
+      <text class="ss-cap">待买</text>
+    </view>
+    <view class="ss-div"></view>
+    <view class="ss-item">
+      <text class="ss-num mono">{{estTotal}}</text>
+      <text class="ss-cap">预估合计</text>
+    </view>
+  </view>
+
+  <!-- 筛选 -->
+  <view class="filter-row">
+    <view class="chip {{filter === 'todo' ? 'active' : ''}}" data-f="todo" bindtap="onFilterTap">待买</view>
+    <view class="chip {{filter === 'done' ? 'active' : ''}}" data-f="done" bindtap="onFilterTap">已买</view>
+    <view class="chip {{filter === 'all' ? 'active' : ''}}" data-f="all" bindtap="onFilterTap">全部</view>
+  </view>
+
+  <!-- 清单 -->
+  <view class="sh-list">
+    <view class="sh-row" wx:for="{{list}}" wx:key="id">
+      <view class="sh-check {{item.bought ? 'on' : ''}}" data-id="{{item.id}}" bindtap="onToggle">
+        <text wx:if="{{item.bought}}">✓</text>
+      </view>
+      <view class="sh-main">
+        <text class="sh-name {{item.bought ? 'done' : ''}}">{{item.name}}</text>
+        <text class="sh-cat">{{item.category}}</text>
+      </view>
+      <text class="sh-est mono" wx:if="{{item.est}}">¥{{item.est}}</text>
+      <text class="sh-del" data-id="{{item.id}}" bindtap="onDel">×</text>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{!list.length}}">清单是空的</view>
+
+  <!-- 操作 -->
+  <view class="ops">
+    <button class="btn add-btn" bindtap="showAdd">+ 添加</button>
+    <button class="btn ghost-btn" bindtap="clearDone" wx:if="{{doneCount}}">清除已买（{{doneCount}}）</button>
+  </view>
+
+  <!-- 添加弹层 -->
+  <view class="mask" wx:if="{{addVisible}}" bindtap="hideAdd">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">添加待买</view>
+      <view class="form-row">
+        <view class="fl">想买什么</view>
+        <input class="field" value="{{form.name}}" data-key="name" bindinput="onFormInput" placeholder="降噪耳机" maxlength="40" />
+      </view>
+      <view class="form-2col">
+        <view class="form-col">
+          <view class="fl">分类</view>
+          <picker range="{{cats}}" value="{{catIdx}}" bindchange="onCatChange">
+            <view class="field">{{cats[catIdx]}}</view>
+          </picker>
+        </view>
+        <view class="form-col">
+          <view class="fl">预估单价</view>
+          <input class="field mono" type="digit" value="{{form.est}}" data-key="est" bindinput="onFormInput" placeholder="0" />
+        </view>
+      </view>
+      <view class="sheet-ops">
+        <button class="btn primary" bindtap="saveItem">加入清单</button>
+      </view>
+    </view>
+  </view>
+</view>

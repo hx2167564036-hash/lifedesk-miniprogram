@@ -1,0 +1,108 @@
+<view class="page">
+  <!-- 身体数据 -->
+  <view class="card fit-card">
+    <view class="card-rule"></view>
+    <view class="fit-head">
+      <text class="card-title">身体数据</text>
+      <text class="card-no">BODY</text>
+    </view>
+    <view class="fit-nums">
+      <view class="fn-item">
+        <text class="fn-num mono">{{latest.weight || '—'}}</text>
+        <text class="fn-cap">体重 kg</text>
+      </view>
+      <view class="fn-div"></view>
+      <view class="fn-item">
+        <text class="fn-num mono">{{bmi}}</text>
+        <text class="fn-cap">BMI · {{bmiLevel}}</text>
+      </view>
+      <view class="fn-div"></view>
+      <view class="fn-item">
+        <text class="fn-num mono">{{tdee}}</text>
+        <text class="fn-cap">TDEE kcal</text>
+      </view>
+    </view>
+    <view class="fit-chart">
+      <canvas type="2d" id="fit-canvas" class="fit-canvas"></canvas>
+      <text class="fit-chart-cap">近 {{entries.length}} 次记录 · 单位 kg</text>
+    </view>
+  </view>
+
+  <!-- 目标进度 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-label">GOAL</text>
+      <text class="sec-count mono">{{goalPct}}%</text>
+    </view>
+    <view class="goal-bar">
+      <view class="goal-fill" style="width: {{goalPct}}%"></view>
+    </view>
+    <view class="goal-meta">
+      <text class="mono">当前 {{latest.weight || '—'}} kg</text>
+      <text class="mono">目标 {{goalWeight}} kg</text>
+      <text class="mono">日均缺口 {{gap}} kcal</text>
+    </view>
+  </view>
+
+  <!-- 今日饮食运动 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-label">TODAY</text>
+    </view>
+    <view class="cal-row">
+      <view class="cal-item">
+        <text class="cal-label">摄入</text>
+        <input class="field mono cal-input" type="digit" value="{{todayIntake}}" bindblur="onIntake" placeholder="0" />
+      </view>
+      <view class="cal-item">
+        <text class="cal-label">运动消耗</text>
+        <input class="field mono cal-input" type="digit" value="{{todayBurn}}" bindblur="onBurn" placeholder="0" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 周计划 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-label">WEEK PLAN</text>
+    </view>
+    <view class="day-col {{i === todayIdx ? 'today' : ''}}" wx:for="{{DAYS}}" wx:for-item="d" wx:for-index="i" wx:key="*this">
+      <view class="dc-name">
+        <text>{{d}}</text>
+        <text class="dc-today" wx:if="{{i === todayIdx}}">今</text>
+      </view>
+      <view class="plan-item" wx:for="{{weekPlan[i]}}" wx:for-item="p" wx:key="id">
+        <text class="pi-name">{{p.name}}</text>
+        <text class="pi-del" data-day="{{i}}" data-id="{{p.id}}" bindtap="delPlan">×</text>
+      </view>
+      <view class="plan-add">
+        <input class="pa-input" value="{{inputs[i]}}" data-day="{{i}}" bindinput="onPlanInput" bindconfirm="addPlan" placeholder="+ 项目" maxlength="20" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 记体重 -->
+  <view class="ops">
+    <button class="btn add-btn" bindtap="showWeight">+ 记录体重/体脂</button>
+  </view>
+
+  <!-- 记录弹层 -->
+  <view class="mask" wx:if="{{addVisible}}" bindtap="hideAdd">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">记录身体数据</view>
+      <view class="form-2col">
+        <view class="form-col">
+          <view class="fl">体重 kg</view>
+          <input class="field mono" type="digit" value="{{form.weight}}" data-key="weight" bindinput="onFormInput" placeholder="65.2" />
+        </view>
+        <view class="form-col">
+          <view class="fl">体脂 %（可选）</view>
+          <input class="field mono" type="digit" value="{{form.fat}}" data-key="fat" bindinput="onFormInput" placeholder="18" />
+        </view>
+      </view>
+      <view class="sheet-ops">
+        <button class="btn primary" bindtap="saveEntry">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

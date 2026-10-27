@@ -1,0 +1,102 @@
+<view class="page">
+  <!-- 用户卡片 -->
+  <view class="card profile-card">
+    <view class="card-rule"></view>
+    <view class="pc-row">
+      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" hover-class="hover">
+        <image wx:if="{{profile.avatar}}" src="{{profile.avatar}}" class="avatar" mode="aspectFill" />
+        <text wx:else class="avatar-ph">{{profileInitial}}</text>
+      </button>
+      <view class="p-mid">
+        <input
+          class="nick-input"
+          type="nickname"
+          value="{{profile.nick}}"
+          placeholder="点击设置昵称"
+          bind:blur="onNickBlur"
+          maxlength="12"
+        />
+        <view class="p-status">
+          <view class="dot {{storeMode === 'cloud' ? 'on' : ''}}"></view>
+          <text class="p-status-text">{{storeMode === 'cloud' ? '云端同步已开启' : '本地模式 · 未上云'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 每日签到 -->
+  <view class="card checkin-card">
+    <view class="ck-left">
+      <view class="ck-title">每日签到</view>
+      <view class="ck-meta">
+        <text class="mono">连续 {{checkin.streak}} 天</text>
+        <text class="ck-dot">·</text>
+        <text class="mono">累计 {{checkin.total}} 天</text>
+      </view>
+    </view>
+    <button class="ck-btn {{checkedToday ? 'done' : ''}}" bindtap="onCheckin" hover-class="ck-pressed">
+      {{checkedToday ? '今日已签' : '签到'}}
+    </button>
+  </view>
+
+  <!-- 数据统计 -->
+  <view class="card stats-card">
+    <view class="sec-head">
+      <text class="sec-label">MY DATA</text>
+      <text class="sec-count mono">{{stats.total}} 条</text>
+    </view>
+    <view class="brief-grid">
+      <view class="bg-item"><text class="bg-num serif">{{stats.days}}</text><text class="bg-cap">加入天数</text></view>
+      <view class="bg-item"><text class="bg-num serif">{{stats.streak}}</text><text class="bg-cap">连续打卡</text></view>
+      <view class="bg-item"><text class="bg-num serif">{{stats.courses}}</text><text class="bg-cap">课程</text></view>
+      <view class="bg-item"><text class="bg-num serif">{{stats.hw}}</text><text class="bg-cap">待交作业</text></view>
+    </view>
+    <view class="uid-row">
+      <text class="uid-label">微信标识</text>
+      <text class="uid-val mono">{{openidMask}}</text>
+    </view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="card">
+    <view class="sec-head">
+      <text class="sec-label">MODULES</text>
+    </view>
+    <view class="entry-row" wx:for="{{entries}}" wx:key="page"
+          hover-class="entry-pressed" bindtap="onEntryTap" data-page="{{item.page}}">
+      <text class="entry-idx mono">{{item.idx}}</text>
+      <text class="entry-name">{{item.name}}</text>
+      <text class="entry-desc">{{item.desc}}</text>
+      <text class="entry-arrow">→</text>
+    </view>
+  </view>
+
+  <!-- 账号与设置 -->
+  <view class="card ops-card">
+    <view class="sec-head">
+      <text class="sec-label">ACCOUNT</text>
+    </view>
+    <view class="op-row" hover-class="op-pressed" bindtap="onRelogin">
+      <text class="op-name">刷新登录态</text>
+      <text class="op-desc">{{loginOk ? '微信登录正常' : '登录异常，点此重试'}}</text>
+      <text class="op-arrow">›</text>
+    </view>
+    <view class="op-row" hover-class="op-pressed" bindtap="onSyncNow">
+      <text class="op-name">立即同步</text>
+      <text class="op-desc">从云端拉取最新数据</text>
+      <text class="op-arrow">›</text>
+    </view>
+    <view class="op-row" hover-class="op-pressed" bindtap="onSwitchAccount">
+      <text class="op-name">切换账号</text>
+      <text class="op-desc">退出后换微信号登录</text>
+      <text class="op-arrow">›</text>
+    </view>
+    <view class="op-row" hover-class="op-pressed" bindtap="onAbout">
+      <text class="op-name">关于</text>
+      <text class="op-desc">版本与说明</text>
+      <text class="op-arrow">›</text>
+    </view>
+  </view>
+
+  <custom-tab-bar />
+</view>

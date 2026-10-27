@@ -1,0 +1,96 @@
+<view class="page">
+  <!-- 年度统计 + 视图切换 -->
+  <view class="stat-strip">
+    <view class="ss-item">
+      <text class="ss-num mono">{{stats.done}}</text>
+      <text class="ss-cap">看完</text>
+    </view>
+    <view class="ss-div"></view>
+    <view class="ss-item">
+      <text class="ss-num mono">{{stats.doing}}</text>
+      <text class="ss-cap">在看</text>
+    </view>
+    <view class="ss-div"></view>
+    <view class="ss-item">
+      <text class="ss-num mono">{{stats.todo}}</text>
+      <text class="ss-cap">想看</text>
+    </view>
+    <view class="ss-div"></view>
+    <view class="ss-item">
+      <text class="ss-num mono">{{stats.year}}</text>
+      <text class="ss-cap">今年新增</text>
+    </view>
+  </view>
+
+  <!-- 视图切换 -->
+  <view class="view-switch">
+    <view class="vs-chip {{view === 'wall' ? 'active' : ''}}" data-v="wall" bindtap="onViewTap">封面墙</view>
+    <view class="vs-chip {{view === 'list' ? 'active' : ''}}" data-v="list" bindtap="onViewTap">列表</view>
+  </view>
+
+  <!-- 封面墙 -->
+  <view class="wall" wx:if="{{view === 'wall'}}">
+    <view class="wtile" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onTileTap">
+      <view class="wt-cover {{item.cover ? '' : 'empty'}}">
+        <image wx:if="{{item.cover}}" src="{{item.cover}}" mode="aspectFill" class="wt-img" />
+        <text wx:else class="wt-initial">{{item.initial}}</text>
+        <text class="wt-status">{{item.statusText}}</text>
+      </view>
+      <view class="wt-meta">
+        <text class="wt-title">{{item.title}}</text>
+        <text class="wt-stars">{{item.starText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 列表 -->
+  <view class="media-list" wx:else>
+    <view class="ml-row" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onTileTap">
+      <view class="ml-main">
+        <text class="ml-title">{{item.title}}</text>
+        <text class="ml-sub">{{item.typeText}} · {{item.statusText}} · {{item.starText}}</text>
+        <text class="ml-review" wx:if="{{item.review}}">{{item.review}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{!list.length}}">还没有收藏</view>
+
+  <button class="btn add-btn" bindtap="showAdd">+ 添加收藏</button>
+
+  <!-- 详情/编辑弹层 -->
+  <view class="mask" wx:if="{{detailVisible}}" bindtap="hideDetail">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">{{form.isNew ? '添加收藏' : '编辑'}}</view>
+      <view class="form-row">
+        <view class="fl">标题</view>
+        <input class="field" value="{{form.title}}" data-key="title" bindinput="onFormInput" maxlength="40" />
+      </view>
+      <view class="form-row">
+        <view class="fl">类型</view>
+        <view class="type-chips">
+          <view class="chip {{form.type === t.key ? 'active' : ''}}" wx:for="{{types}}" wx:for-item="t" wx:key="key" data-t="{{t.key}}" bindtap="onTypeTap">{{t.label}}</view>
+        </view>
+      </view>
+      <view class="form-row">
+        <view class="fl">状态</view>
+        <view class="type-chips">
+          <view class="chip {{form.status === s.key ? 'active' : ''}}" wx:for="{{statuses}}" wx:for-item="s" wx:key="key" data-s="{{s.key}}" bindtap="onStatusTap">{{s.label}}</view>
+        </view>
+      </view>
+      <view class="form-row">
+        <view class="fl">星级</view>
+        <view class="star-row">
+          <text class="star {{i < form.rating ? 'on' : ''}}" wx:for="{{[1,2,3,4,5]}}" wx:key="*this" data-r="{{i + 1}}" bindtap="onStarTap">★</text>
+        </view>
+      </view>
+      <view class="form-row">
+        <view class="fl">短评（可选）</view>
+        <input class="field" value="{{form.review}}" data-key="review" bindinput="onFormInput" maxlength="60" />
+      </view>
+      <view class="sheet-ops">
+        <button class="btn danger-text" wx:if="{{!form.isNew}}" bindtap="delItem">删除</button>
+        <button class="btn primary" bindtap="saveItem">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

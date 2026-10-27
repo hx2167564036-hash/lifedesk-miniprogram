@@ -1,0 +1,173 @@
+.page { padding-bottom: 200rpx; }
+
+.week-bar { display: flex; align-items: center; }
+.wk-btn {
+  width: 56rpx; height: 56rpx;
+  border-radius: 50%;
+  background: #EFEAE0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34rpx; color: #6B6357;
+}
+.wk-mid { flex: 1; text-align: center; }
+.wk-title { font-size: 32rpx; font-weight: 600; }
+.wk-range { font-size: 20rpx; color: #9A917F; margin-top: 2rpx; }
+.wk-now {
+  font-size: 22rpx; color: #A2402A;
+  padding: 6rpx 18rpx;
+  border: 1rpx solid #A2402A;
+  border-radius: 8rpx;
+}
+
+.empty-guide { text-align: center; padding: 48rpx 28rpx; }
+.eg-title { font-size: 34rpx; font-weight: 600; margin-bottom: 10rpx; }
+.eg-sub { font-size: 24rpx; color: #6B6357; margin-bottom: 24rpx; }
+.eg-ops { display: flex; gap: 20rpx; justify-content: center; }
+.eg-ops .btn { padding: 0 36rpx; }
+
+/* 周视图网格 */
+.grid-card { padding: 20rpx 12rpx; }
+.grid { display: flex; flex-direction: column; }
+.g-row { display: flex; }
+.g-head { margin-bottom: 8rpx; }
+.g-time {
+  width: 84rpx;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 8rpx 0;
+}
+.gt-t { font-size: 20rpx; color: #6B6357; }
+.gt-n { font-size: 18rpx; color: #9A917F; }
+.g-day {
+  flex: 1;
+  text-align: center;
+  font-size: 22rpx;
+  color: #6B6357;
+  padding: 10rpx 0;
+}
+.g-day.today {
+  color: #A2402A;
+  font-weight: 600;
+  background: #F6EAE5;
+  border-radius: 10rpx;
+}
+.g-cell {
+  flex: 1;
+  min-height: 108rpx;
+  border-bottom: 1rpx solid #F0EAE0;
+  padding: 3rpx;
+  box-sizing: border-box;
+}
+.g-cell.today { background: rgba(246, 234, 229, 0.4); }
+.cblock {
+  height: 100%;
+  min-height: 100rpx;
+  background: #FDFCF9;
+  border-left: 6rpx solid #A2402A;
+  border-radius: 8rpx;
+  padding: 8rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.cb-name {
+  font-size: 21rpx;
+  font-weight: 600;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.cb-loc {
+  font-size: 18rpx;
+  color: #6B6357;
+  margin-top: 2rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cb-range { font-size: 17rpx; color: #9A917F; margin-top: 2rpx; }
+.cblock-cont {
+  height: 100%;
+  min-height: 100rpx;
+  border-left: 6rpx solid rgba(162, 64, 42, 0.15);
+  border-radius: 8rpx;
+}
+
+/* 操作区 */
+.ops {
+  position: fixed;
+  left: 24rpx; right: 24rpx; bottom: calc(120rpx + env(safe-area-inset-bottom));
+  display: flex; gap: 16rpx;
+  z-index: 80;
+}
+.op {
+  flex: 1;
+  background: rgba(253, 252, 249, 0.96);
+  border: 1rpx solid #EDE7DB;
+  font-size: 24rpx;
+}
+
+/* 导入弹层 */
+.fmt-card {
+  background: #FDFCF9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 18rpx;
+}
+.fmt-title { font-size: 24rpx; font-weight: 600; margin-bottom: 8rpx; }
+.fmt-code {
+  font-size: 22rpx;
+  color: #A2402A;
+  background: #F6EAE5;
+  border-radius: 8rpx;
+  padding: 10rpx 14rpx;
+  margin-bottom: 8rpx;
+}
+.fmt-sub { font-size: 20rpx; color: #6B6357; }
+.fmt-fill { font-size: 22rpx; color: #6E685C; margin-top: 8rpx; }
+.fmt-ops { display: flex; justify-content: space-between; }
+.ta {
+  width: 100%;
+  min-height: 200rpx;
+  background: #FDFCF9;
+  border: 1rpx solid #EDE7DB;
+  border-radius: 12rpx;
+  padding: 18rpx;
+  font-size: 26rpx;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+.parse-btn { margin: 16rpx 0; }
+.parse-result {
+  background: #FDFCF9;
+  border-radius: 12rpx;
+  padding: 18rpx;
+  font-size: 22rpx;
+  max-height: 300rpx;
+  overflow-y: auto;
+}
+.pr-head { font-weight: 600; margin-bottom: 8rpx; }
+.pr-item {
+  font-size: 21rpx;
+  color: #2B2620;
+  padding: 4rpx 0;
+  border-bottom: 1rpx solid #F0EAE0;
+}
+.pr-item:last-child { border-bottom: none; }
+
+/* 表单 */
+.form-row { margin-bottom: 18rpx; }
+.form-2col { display: flex; gap: 14rpx; margin-bottom: 18rpx; }
+.form-col { flex: 1; }
+.form-col .field { width: 100%; }
+.danger-text { color: #B03A2E; background: #F7E7E4; }
+
+.periods-list { max-height: 46vh; overflow-y: auto; }
+.pl-row {
+  display: flex; align-items: center;
+  padding: 10rpx 0;
+  border-bottom: 1rpx solid #F0EAE0;
+}
+.pl-n { width: 90rpx; font-size: 22rpx; color: #6B6357; }
+.pl-time { flex: 1; text-align: center; }
+.pl-dash { width: 40rpx; text-align: center; color: #9A917F; }

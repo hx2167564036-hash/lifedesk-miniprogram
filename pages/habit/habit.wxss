@@ -1,0 +1,63 @@
+.page { padding-bottom: 200rpx; }
+
+.h-head { display: flex; align-items: center; margin-bottom: 18rpx; }
+.h-dot { width: 16rpx; height: 16rpx; border-radius: 50%; margin-right: 12rpx; }
+.h-name { font-size: 29rpx; font-weight: 600; flex: 1; }
+.h-streak { font-size: 20rpx; color: #B8862B; margin-right: 14rpx; }
+.h-del { font-size: 20rpx; color: #C9C2B4; }
+.h-body { display: flex; align-items: center; }
+
+.check-btn {
+  width: 64rpx; height: 64rpx;
+  border-radius: 50%;
+  border: 3rpx solid #C9C2B4;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34rpx; color: #FFF;
+  margin-right: 20rpx;
+}
+.check-btn.on { background: #3F6B4F; border-color: #3F6B4F; }
+.h-status { font-size: 24rpx; }
+
+.count-btn {
+  width: 88rpx; height: 64rpx;
+  border-radius: 12rpx;
+  background: #A2402A;
+  color: #FFF;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; font-weight: 600;
+  margin-right: 20rpx;
+}
+.count-mid { flex: 1; }
+.count-bar {
+  height: 16rpx;
+  background: #EFEAE0;
+  border-radius: 999rpx;
+  overflow: hidden;
+  margin-bottom: 8rpx;
+}
+.count-fill { height: 100%; border-radius: 999rpx; transition: width 0.25s; }
+.count-num { font-size: 22rpx; color: #6B6357; }
+
+.num-input { width: 180rpx; margin-right: 16rpx; }
+.h-unit { font-size: 24rpx; color: #6B6357; margin-right: 20rpx; }
+
+.add-btn { margin: 8rpx 24rpx 24rpx; }
+
+.heat {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8rpx;
+}
+.hcell {
+  position: relative;
+  height: 0;
+  padding-top: 100%; /* 1:1 方格（padding 技巧，兼容旧版 WebView） */
+  border-radius: 8rpx;
+}
+.hcell-n {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16rpx;
+  color: #FDFCF9;
+}
+.heat-cap { font-size: 20rpx; margin-top: 14rpx; }

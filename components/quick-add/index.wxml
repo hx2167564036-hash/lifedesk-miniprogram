@@ -1,0 +1,25 @@
+<view class="qa-mask" wx:if="{{visible}}" bindtap="onMaskTap">
+  <view class="qa-sheet" catchtap="noop">
+    <view class="qa-head">
+      <text class="qa-title">智能收集箱</text>
+      <text class="qa-sub">说一句话，自动归类</text>
+    </view>
+    <textarea
+      class="qa-input"
+      value="{{text}}"
+      bindinput="onInput"
+      placeholder="比如：明天下午三点 高数小组讨论 / 记一笔 午饭 15 / 高数作业 周五交 / 想买 降噪耳机"
+      maxlength="100"
+      auto-focus
+    ></textarea>
+    <view class="qa-preview" wx:if="{{parsed}}">
+      <text class="tag {{parsed.type === 'unknown' ? 'warn' : ''}}">{{parsed.label}}</text>
+      <text class="qa-preview-text">{{parsed.preview}}</text>
+    </view>
+    <view class="qa-ops">
+      <button class="btn qa-btn" bindtap="onCancel">取消</button>
+      <button class="btn primary qa-btn" bindtap="onConfirm">加入</button>
+    </view>
+    <view class="qa-hint">支持：日程 / 作业 / 记账 / 待买 / 习惯打卡，说错也没关系，随时改</view>
+  </view>
+</view>

@@ -1,0 +1,95 @@
+<view class="page">
+  <!-- 习惯列表 -->
+  <view class="card" wx:for="{{habits}}" wx:for-item="h" wx:key="id">
+    <view class="h-head">
+      <view class="h-dot" style="background: {{h.color}}"></view>
+      <view class="h-name">{{h.name}}</view>
+      <text class="h-streak" wx:if="{{h.streak > 0}}">连续 {{h.streak}} 天</text>
+      <text class="h-del" data-id="{{h.id}}" bindtap="delHabit">删除</text>
+    </view>
+    <!-- 勾选型 -->
+    <view class="h-body" wx:if="{{h.type === 'check'}}">
+      <view class="check-btn {{h.done ? 'on' : ''}}" data-id="{{h.id}}" bindtap="onCheck">
+        <text wx:if="{{h.done}}">✓</text>
+      </view>
+      <text class="h-status {{h.done ? 'green' : 'faint'}}">{{h.done ? '今日已完成' : '今日未打卡'}}</text>
+    </view>
+    <!-- 计数型 -->
+    <view class="h-body" wx:if="{{h.type === 'count'}}">
+      <view class="count-btn" data-id="{{h.id}}" bindtap="onCountTap">+1</view>
+      <view class="count-mid">
+        <view class="count-bar">
+          <view class="count-fill" style="width: {{h.pct}}%; background: {{h.color}}"></view>
+        </view>
+        <text class="count-num mono">{{h.todayVal}} / {{h.target}}{{h.unit}}</text>
+      </view>
+    </view>
+    <!-- 数值型 -->
+    <view class="h-body" wx:if="{{h.type === 'number'}}">
+      <input
+        class="field mono num-input"
+        type="digit"
+        value="{{h.todayVal}}"
+        data-id="{{h.id}}"
+        bindinput="onNumInput"
+        placeholder="0"
+      />
+      <text class="h-unit faint">{{h.unit}}</text>
+      <text class="h-status {{h.done ? 'green' : 'faint'}}">{{h.done ? '已达标' : '目标 ' + h.target + h.unit}}</text>
+    </view>
+  </view>
+
+  <button class="btn add-btn" bindtap="showAdd">+ 添加习惯</button>
+
+  <!-- 30 天热力图 -->
+  <view class="card">
+    <view class="sec-head">
+      <text class="sec-label">30 DAYS</text>
+      <text class="sec-title">打卡热力图</text>
+      <view class="sec-line"></view>
+    </view>
+    <view class="heat">
+      <view
+        class="hcell"
+        wx:for="{{heat}}"
+        wx:for-item="c"
+        wx:key="date"
+        style="background: {{c.bgcolor}}"
+      >
+        <text class="hcell-n" wx:if="{{c.ratio > 0}}">{{c.ratio}}</text>
+      </view>
+    </view>
+    <view class="heat-cap faint">每格一天，颜色越深完成度越高</view>
+  </view>
+
+  <!-- 添加弹层 -->
+  <view class="mask" wx:if="{{addVisible}}" bindtap="hideAdd">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">添加习惯</view>
+      <view class="form-row">
+        <view class="fl">习惯名称</view>
+        <input class="field" value="{{formName}}" bindinput="onNameInput" placeholder="背单词 50 个" maxlength="20" />
+      </view>
+      <view class="form-row">
+        <view class="fl">打卡方式</view>
+        <view class="type-chips">
+          <view class="chip {{formType === t.key ? 'active' : ''}}" wx:for="{{types}}" wx:for-item="t" wx:key="key" data-t="{{t.key}}" bindtap="onTypeTap">{{t.label}}</view>
+        </view>
+      </view>
+      <block wx:if="{{formType !== 'check'}}">
+        <view class="form-row">
+          <view class="fl">每日目标</view>
+          <input class="field mono" type="number" value="{{formTarget}}" bindinput="onTargetInput" placeholder="30" />
+        </view>
+        <view class="form-row">
+          <view class="fl">单位（可选）</view>
+          <input class="field" value="{{formUnit}}" bindinput="onUnitInput" placeholder="分钟" maxlength="6" />
+        </view>
+      </block>
+      <view class="sheet-ops">
+        <button class="btn primary" bindtap="saveHabit">保存</button>
+      </view>
+    </view>
+  </view>
+  <custom-tab-bar />
+</view>

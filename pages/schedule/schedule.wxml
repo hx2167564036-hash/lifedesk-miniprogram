@@ -1,0 +1,86 @@
+<view class="page">
+  <!-- 今日 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-label">TODAY</text>
+      <text class="sec-count mono">{{todayList.length}}</text>
+    </view>
+    <view class="sc-row" wx:for="{{todayList}}" wx:key="id">
+      <view class="sc-check {{item.done ? 'on' : ''}}" data-id="{{item.id}}" bindtap="onToggle">
+        <text wx:if="{{item.done}}">✓</text>
+      </view>
+      <view class="sc-main">
+        <text class="sc-title {{item.done ? 'done' : ''}}">{{item.title}}</text>
+        <text class="sc-sub mono">
+          {{item.time ? item.time + ' · ' : ''}}{{item.prioText}}
+          <text wx:if="{{item.rolled}}" class="roll-tag">已顺延</text>
+        </text>
+      </view>
+      <text class="sc-del" data-id="{{item.id}}" bindtap="onDel">×</text>
+    </view>
+    <view class="empty" wx:if="{{!todayList.length}}">今天没有安排</view>
+  </view>
+
+  <!-- 后续日程 -->
+  <view class="section" wx:if="{{upcoming.length}}">
+    <view class="sec-head">
+      <text class="sec-label">UPCOMING</text>
+      <text class="sec-count mono">{{upcoming.length}}</text>
+    </view>
+    <view class="day-group" wx:for="{{groups}}" wx:for-item="g" wx:key="date">
+      <view class="dg-head">
+        <text class="dg-date mono">{{g.date}}</text>
+        <text class="dg-week">{{g.week}}</text>
+        <text class="dg-today" wx:if="{{g.isToday}}">今天</text>
+      </view>
+      <view class="sc-row" wx:for="{{g.items}}" wx:for-item="item" wx:key="id">
+        <view class="sc-check {{item.done ? 'on' : ''}}" data-id="{{item.id}}" bindtap="onToggle">
+          <text wx:if="{{item.done}}">✓</text>
+        </view>
+        <view class="sc-main">
+          <text class="sc-title {{item.done ? 'done' : ''}}">{{item.title}}</text>
+          <text class="sc-sub mono">{{item.time ? item.time + ' · ' : ''}}{{item.prioText}}</text>
+        </view>
+        <text class="sc-del" data-id="{{item.id}}" bindtap="onDel">×</text>
+      </view>
+    </view>
+  </view>
+
+  <button class="btn add-btn" bindtap="showAdd">+ 新增日程</button>
+
+  <!-- 新增弹层 -->
+  <view class="mask" wx:if="{{addVisible}}" bindtap="hideAdd">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">新增日程</view>
+      <view class="form-row">
+        <view class="fl">事项</view>
+        <input class="field" value="{{form.title}}" data-key="title" bindinput="onFormInput" placeholder="口语模考" maxlength="40" />
+      </view>
+      <view class="form-2col">
+        <view class="form-col">
+          <view class="fl">日期</view>
+          <picker mode="date" value="{{form.date}}" bindchange="onDateChange">
+            <view class="field mono">{{form.date}}</view>
+          </picker>
+        </view>
+        <view class="form-col">
+          <view class="fl">时间（可选）</view>
+          <input class="field mono" value="{{form.time}}" data-key="time" bindinput="onFormInput" placeholder="14:00" maxlength="5" />
+        </view>
+      </view>
+      <view class="form-row">
+        <view class="fl">优先级</view>
+        <view class="prio-chips">
+          <view class="chip {{form.priority === p.key ? 'active' : ''}}" wx:for="{{prios}}" wx:for-item="p" wx:key="key" data-p="{{p.key}}" bindtap="onPrioTap">{{p.label}}</view>
+        </view>
+      </view>
+      <view class="form-row">
+        <view class="fl">备注（可选）</view>
+        <input class="field" value="{{form.note}}" data-key="note" bindinput="onFormInput" maxlength="40" />
+      </view>
+      <view class="sheet-ops">
+        <button class="btn primary" bindtap="saveItem">添加</button>
+      </view>
+    </view>
+  </view>
+</view>

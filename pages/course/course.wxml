@@ -1,0 +1,175 @@
+<view class="page">
+  <!-- 周次切换 -->
+  <view class="card week-bar">
+    <view class="wk-btn" bindtap="prevWeek">‹</view>
+    <view class="wk-mid">
+      <view class="wk-title serif">第 {{week}} 周</view>
+      <view class="wk-range">{{weekRange}}</view>
+    </view>
+    <view class="wk-btn" bindtap="nextWeek">›</view>
+    <view class="wk-now" bindtap="goThisWeek">本周</view>
+  </view>
+
+  <!-- 空状态引导 -->
+  <view class="card empty-guide" wx:if="{{loadEmpty}}">
+    <view class="eg-title serif">还没有课程</view>
+    <view class="eg-sub">从教务系统 / WakeUp / Excel 复制课表粘贴导入，或手动添加</view>
+    <view class="eg-ops">
+      <button class="btn primary" bindtap="showImport">导入课程表</button>
+      <button class="btn" bindtap="showAdd">+ 手动添加</button>
+    </view>
+  </view>
+
+  <!-- 周视图 -->
+  <view class="card grid-card" wx:else>
+    <view class="grid">
+      <view class="g-row g-head">
+        <view class="g-time"></view>
+        <view class="g-day {{i === todayIdx ? 'today' : ''}}" wx:for="{{WEEK_CN}}" wx:for-item="d" wx:for-index="i" wx:key="*this">{{d}}</view>
+      </view>
+      <view class="g-row" wx:for="{{rows}}" wx:for-item="row" wx:for-index="ri" wx:key="n">
+        <view class="g-time">
+          <text class="mono gt-t">{{row.start}}</text>
+          <text class="gt-n">第{{row.n}}节</text>
+        </view>
+        <view class="g-cell {{col === todayIdx ? 'today' : ''}}" wx:for="{{row.cells}}" wx:for-item="cell" wx:for-index="col" wx:key="k">
+          <view
+            class="cblock"
+            wx:if="{{cell.course && cell.isStart}}"
+            style="border-left-color: {{cell.course.color || '#A2402A'}}"
+            data-id="{{cell.course.id}}"
+            bindtap="editCourse"
+          >
+            <view class="cb-name">{{cell.course.name}}</view>
+            <view class="cb-loc" wx:if="{{cell.course.location}}">{{cell.course.location}}</view>
+            <view class="cb-range" wx:if="{{cell.course.end > cell.course.start}}">{{cell.course.start}}-{{cell.course.end}}节</view>
+          </view>
+          <view class="cblock-cont" wx:elif="{{cell.course}}"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作区 -->
+  <view class="ops">
+    <button class="btn op" bindtap="showImport">导入课程表</button>
+    <button class="btn op" bindtap="showAdd">+ 添加课程</button>
+    <button class="btn op" bindtap="showPeriods">节次时间</button>
+  </view>
+
+  <!-- 导入弹层 -->
+  <view class="mask" wx:if="{{importVisible}}" bindtap="hideImport">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">导入课程表</view>
+      <view class="fmt-card">
+        <view class="fmt-title">每行一门课，逗号 / 制表符分隔均可：</view>
+        <view class="fmt-code mono">课程名, 星期, 节次, 地点, 老师, 周次</view>
+        <view class="fmt-sub">支持从教务系统课表页、WakeUp 导出、Excel 直接复制粘贴，也支持从微信聊天里选文件</view>
+        <view class="fmt-ops">
+          <text class="fmt-fill" bindtap="fillExample">填入示例 ›</text>
+          <text class="fmt-fill" bindtap="importFromFile">从聊天文件导入 ›</text>
+        </view>
+      </view>
+      <textarea
+        class="ta"
+        value="{{importText}}"
+        bindinput="onImportInput"
+        placeholder="高等数学,周一,1-2,教三-101,王老师,1-16"
+        maxlength="2000"
+      ></textarea>
+      <view class="parse-btn">
+        <button class="btn" bindtap="doParse">解析</button>
+      </view>
+      <view class="parse-result" wx:if="{{importResult}}">
+        <view class="pr-ok" wx:if="{{importResult.ok.length}}">
+          <view class="pr-head green">可导入 {{importResult.ok.length}} 门：</view>
+          <view class="pr-item" wx:for="{{importResult.ok}}" wx:for-item="c" wx:key="id">
+            {{c.name}} · {{WEEK_CN[c.day]}} 第{{c.start}}-{{c.end}}节 · {{c.location}}
+          </view>
+        </view>
+        <view class="pr-bad" wx:if="{{importResult.bad.length}}">
+          <view class="pr-head red">无法识别 {{importResult.bad.length}} 行：</view>
+          <view class="pr-item" wx:for="{{importResult.bad}}" wx:for-item="b" wx:key="line">
+            {{b.line}}（{{b.reason}}）
+          </view>
+        </view>
+      </view>
+      <view class="sheet-ops" wx:if="{{importResult && importResult.ok.length}}">
+        <button class="btn" data-mode="merge" bindtap="doImport">合并导入</button>
+        <button class="btn primary" data-mode="overwrite" bindtap="doImport">覆盖导入</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 课程编辑弹层 -->
+  <view class="mask" wx:if="{{editVisible}}" bindtap="hideEdit">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">{{editForm.isNew ? '添加课程' : '编辑课程'}}</view>
+      <view class="form-row">
+        <view class="fl">课程名称</view>
+        <input class="field" value="{{editForm.name}}" data-key="name" bindinput="onFormInput" placeholder="高等数学" maxlength="30" />
+      </view>
+      <view class="form-2col">
+        <view class="form-col">
+          <view class="fl">星期</view>
+          <picker range="{{WEEK_CN}}" value="{{editForm.day}}" bindchange="onDayChange">
+            <view class="field">{{WEEK_CN[editForm.day]}}</view>
+          </picker>
+        </view>
+        <view class="form-col">
+          <view class="fl">开始节次</view>
+          <input class="field mono" type="number" value="{{editForm.start}}" data-key="start" bindinput="onFormInput" />
+        </view>
+        <view class="form-col">
+          <view class="fl">结束节次</view>
+          <input class="field mono" type="number" value="{{editForm.end}}" data-key="end" bindinput="onFormInput" />
+        </view>
+      </view>
+      <view class="form-row">
+        <view class="fl">地点（可选）</view>
+        <input class="field" value="{{editForm.location}}" data-key="location" bindinput="onFormInput" placeholder="教三-101" maxlength="30" />
+      </view>
+      <view class="form-row">
+        <view class="fl">老师（可选）</view>
+        <input class="field" value="{{editForm.teacher}}" data-key="teacher" bindinput="onFormInput" placeholder="王老师" maxlength="20" />
+      </view>
+      <view class="form-row">
+        <view class="fl">上课周次</view>
+        <input class="field mono" value="{{editForm.weeks}}" data-key="weeks" bindinput="onFormInput" placeholder="1-16" maxlength="20" />
+      </view>
+      <view class="sheet-ops">
+        <button class="btn danger-text" wx:if="{{!editForm.isNew}}" bindtap="delCourse">删除</button>
+        <button class="btn primary" bindtap="saveCourse">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 节次设置弹层 -->
+  <view class="mask" wx:if="{{periodsVisible}}" bindtap="hidePeriods">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">节次时间设置</view>
+      <view class="form-row">
+        <view class="fl">开学日（第 1 周周一）</view>
+        <picker mode="date" value="{{cfg.termStart}}" bindchange="onTermStart">
+          <view class="field mono">{{cfg.termStart || '点击选择'}}</view>
+        </picker>
+      </view>
+      <view class="form-row">
+        <view class="fl">学期总周数</view>
+        <input class="field mono" type="number" value="{{totalWeeks}}" bindblur="onWeeksBlur" placeholder="20" />
+      </view>
+      <view class="periods-list">
+        <view class="pl-row" wx:for="{{cfg.periods}}" wx:for-item="p" wx:for-index="pi" wx:key="n">
+          <text class="pl-n">第{{p.n}}节</text>
+          <input class="field mono pl-time" value="{{p.start}}" data-idx="{{pi}}" data-key="start" bindinput="onPeriodInput" />
+          <text class="pl-dash">—</text>
+          <input class="field mono pl-time" value="{{p.end}}" data-idx="{{pi}}" data-key="end" bindinput="onPeriodInput" />
+        </view>
+      </view>
+      <view class="sheet-ops">
+        <button class="btn primary" bindtap="saveCfg">保存设置</button>
+      </view>
+    </view>
+  </view>
+  <custom-tab-bar />
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "记账",
+  "usingComponents": {
+    "custom-tab-bar": "/custom-tab-bar/index"
+  }
+}

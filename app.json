@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/course/course",
+    "pages/account/account",
+    "pages/habit/habit",
+    "pages/mine/mine",
+    "pages/fitness/fitness",
+    "pages/schedule/schedule",
+    "pages/shopping/shopping",
+    "pages/media/media",
+    "pages/homework/homework",
+    "pages/gpa/gpa",
+    "pages/data/data"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#F5F3ED",
+    "navigationBarTitleText": "豆皮的生活台",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F5F3ED",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "list": [
+      { "pagePath": "pages/index/index", "text": "今天" },
+      { "pagePath": "pages/course/course", "text": "课程" },
+      { "pagePath": "pages/account/account", "text": "记账" },
+      { "pagePath": "pages/habit/habit", "text": "习惯" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

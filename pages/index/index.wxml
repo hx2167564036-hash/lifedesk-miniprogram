@@ -1,0 +1,109 @@
+<view class="page">
+  <!-- 索引编号行 -->
+  <view class="meta-row">
+    <text class="meta-no">No.010 · OCT · 2026</text>
+    <view class="meta-status">
+      <view class="status-dot"></view>
+      <text class="meta-mode">{{storeMode}}</text>
+    </view>
+  </view>
+
+  <!-- 日期区：非对称，右侧出血超大数字 -->
+  <view class="date-block">
+    <view class="date-left">
+      <text class="date-week">周三</text>
+      <text class="date-label">今日焦点</text>
+    </view>
+    <text class="date-bleed">14</text>
+  </view>
+
+  <!-- 索引卡：生活指数（唯一色彩爆发区） -->
+  <view class="card focus-card">
+    <view class="card-rule"></view>
+    <view class="focus-head">
+      <text class="card-title">生活指数</text>
+      <text class="card-no">IDX-2026-1014</text>
+    </view>
+    <view class="focus-body">
+      <view class="ring-wrap">
+        <canvas type="2d" id="focus-ring" class="ring"></canvas>
+        <view class="ring-center">
+          <text class="ring-num mono">{{indexScore}}</text>
+          <text class="ring-cap">/ 100</text>
+        </view>
+      </view>
+      <view class="focus-meta">
+        <view class="fm-row"><text class="fm-k">习惯打卡</text><text class="fm-v mono">{{parts.habit}}</text></view>
+        <view class="fm-row"><text class="fm-k">今日待办</text><text class="fm-v mono">{{parts.sched}}</text></view>
+        <view class="fm-row"><text class="fm-k">今日记账</text><text class="fm-v mono">{{parts.acct}}</text></view>
+      </view>
+    </view>
+    <view class="focus-note">
+      <text class="fn-label">助理批注</text>
+      <text class="fn-text">{{advisorNote}}</text>
+    </view>
+  </view>
+
+  <!-- 任务清单 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-label">TASK LIST</text>
+      <text class="sec-count mono">05</text>
+    </view>
+    <view class="task-row" wx:for="{{tasks}}" wx:key="no">
+      <text class="task-no mono">{{item.no}}</text>
+      <view class="task-main">
+        <text class="task-title">{{item.title}}</text>
+        <text class="task-sub mono">{{item.sub}}</text>
+      </view>
+      <text class="task-tag" wx:if="{{item.tag}}">{{item.tag}}</text>
+      <text class="task-stamp danger" wx:elif="{{item.overdue}}">逾期</text>
+      <text class="task-stamp today" wx:elif="{{item.today}}">今日</text>
+    </view>
+    <view class="task-empty" wx:if="{{!tasks.length}}">
+      <text class="te-line">今天还没有安排</text>
+      <text class="te-hint">点右下角「记一笔」说句话就能记，或去课程表导入课表</text>
+    </view>
+  </view>
+
+  <!-- 快捷入口：纵向索引条目 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-label">ENTRIES</text>
+      <text class="sec-count mono">06</text>
+    </view>
+    <view class="entry-row" wx:for="{{entries}}" wx:key="idx"
+          hover-class="entry-pressed" bindtap="onEntryTap" data-page="{{item.page}}">
+      <text class="entry-idx mono">{{item.idx}}</text>
+      <text class="entry-name">{{item.name}}</text>
+      <text class="entry-desc">{{item.desc}}</text>
+      <text class="entry-arrow">→</text>
+    </view>
+  </view>
+
+  <!-- 底部统计 -->
+  <view class="footer-stats">
+    <view class="fs-item">
+      <text class="fs-label">本月支出</text>
+      <text class="fs-num mono">{{stats.expense}}</text>
+    </view>
+    <view class="fs-div"></view>
+    <view class="fs-item">
+      <text class="fs-label">习惯连续</text>
+      <text class="fs-num mono">{{stats.streak}}</text>
+    </view>
+    <view class="fs-div"></view>
+    <view class="fs-item">
+      <text class="fs-label">待交作业</text>
+      <text class="fs-num mono">{{stats.homework}}</text>
+    </view>
+  </view>
+
+  <!-- 智能收集箱：索引卡打孔钮 -->
+  <view class="fab" hover-class="fab-pressed" bindtap="openQuickAdd">
+    <text class="fab-plus">＋</text>
+    <text class="fab-text">记一笔</text>
+  </view>
+  <quick-add id="quickadd" bind:confirm="onQuickConfirm" bind:cancel="onQuickCancel"></quick-add>
+  <custom-tab-bar />
+</view>

@@ -1,0 +1,120 @@
+<view class="page">
+  <!-- GPA 主卡 -->
+  <view class="card gpa-card">
+    <view class="card-rule"></view>
+    <text class="gpa-cap">平均学分绩点 · GPA</text>
+    <view class="gpa-num-row">
+      <text class="gpa-num">{{gpa}}</text>
+      <text class="gpa-max">/ 5.0</text>
+    </view>
+    <view class="gpa-meta">
+      <text class="gm-item">总学分 <text class="mono">{{credits}}</text></text>
+      <text class="gm-item">课程 <text class="mono">{{count}}</text> 门</text>
+      <text class="gm-item">学期 <text class="mono">{{terms.length}}</text> 个</text>
+    </view>
+    <view class="gpa-formula">绩点 =（百分制成绩 − 50）÷ 10，GPA 按学分加权，保留 4 位</view>
+  </view>
+
+  <!-- 学期筛选 -->
+  <view class="section" wx:if="{{terms.length}}">
+    <view class="sec-head">
+      <text class="sec-label">TERMS</text>
+    </view>
+    <view class="term-chips">
+      <view class="chip {{termFilter === 'all' ? 'active' : ''}}" data-t="all" bindtap="onTermTap">全部</view>
+      <view class="chip {{termFilter === t ? 'active' : ''}}" wx:for="{{terms}}" wx:for-item="t" wx:key="*this" data-t="{{t}}" bindtap="onTermTap">{{t}}</view>
+    </view>
+  </view>
+
+  <!-- 课程成绩列表 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-label">TRANSCRIPT</text>
+      <text class="sec-count mono">{{list.length}}</text>
+    </view>
+    <view class="g-row" wx:for="{{list}}" wx:for-item="r" wx:key="id">
+      <view class="g-main">
+        <text class="g-name">{{r.name}}</text>
+        <text class="g-term">{{r.term}}</text>
+      </view>
+      <text class="g-credit mono">{{r.credit}} 分</text>
+      <text class="g-score mono">{{r.score}}</text>
+      <text class="g-point mono">{{r.point}}</text>
+      <text class="g-del" data-id="{{r.id}}" bindtap="onDel">×</text>
+    </view>
+    <view class="empty" wx:if="{{!list.length}}">还没有成绩记录</view>
+  </view>
+
+  <view class="ops">
+    <button class="btn add-btn" bindtap="showAdd">+ 录入成绩</button>
+    <button class="btn ghost-btn" bindtap="showBatch">批量导入</button>
+  </view>
+
+  <!-- 批量导入弹层 -->
+  <view class="mask" wx:if="{{batchVisible}}" bindtap="hideBatch">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">批量导入成绩</view>
+      <view class="fmt-card">
+        <view class="fmt-title">每行一门课，逗号 / 制表符 / 空格分隔均可：</view>
+        <view class="fmt-code mono">课程名, 学分, 成绩, 学期</view>
+        <view class="fmt-sub">学期可省略（默认 {{defaultTerm}}）。支持从教务系统成绩页、Excel 直接复制粘贴</view>
+      </view>
+      <textarea
+        class="ta"
+        value="{{batchText}}"
+        bindinput="onBatchInput"
+        placeholder="高等数学,5,88,2025-春&#10;大学英语,3,92,2025-春&#10;线性代数 3 76"
+        maxlength="6000"
+      ></textarea>
+      <view class="parse-btn">
+        <button class="btn" bindtap="doBatchParse">解析</button>
+      </view>
+      <view class="parse-result" wx:if="{{batchResult}}">
+        <view class="pr-ok" wx:if="{{batchResult.ok.length}}">
+          <view class="pr-head green">可导入 {{batchResult.ok.length}} 门：</view>
+          <view class="pr-item mono" wx:for="{{batchResult.ok}}" wx:for-item="c" wx:key="id">
+            {{c.name}} · {{c.credit}} 分 · 成绩 {{c.score}} · 绩点 {{c.point}}
+          </view>
+        </view>
+        <view class="pr-bad" wx:if="{{batchResult.bad.length}}">
+          <view class="pr-head red">无法识别 {{batchResult.bad.length}} 行：</view>
+          <view class="pr-item" wx:for="{{batchResult.bad}}" wx:for-item="b" wx:key="line">
+            {{b.line}}（{{b.reason}}）
+          </view>
+        </view>
+      </view>
+      <view class="sheet-ops" wx:if="{{batchResult && batchResult.ok.length}}">
+        <button class="btn primary" bindtap="doBatchImport">导入 {{batchResult.ok.length}} 门</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 录入弹层 -->
+  <view class="mask" wx:if="{{addVisible}}" bindtap="hideAdd">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title serif">录入成绩</view>
+      <view class="form-row">
+        <view class="fl">课程名称</view>
+        <input class="field" value="{{form.name}}" data-key="name" bindinput="onFormInput" placeholder="高等数学（二）" maxlength="30" />
+      </view>
+      <view class="form-2col">
+        <view class="form-col">
+          <view class="fl">学分</view>
+          <input class="field mono" type="digit" value="{{form.credit}}" data-key="credit" bindinput="onFormInput" placeholder="4" />
+        </view>
+        <view class="form-col">
+          <view class="fl">成绩</view>
+          <input class="field mono" type="digit" value="{{form.score}}" data-key="score" bindinput="onFormInput" placeholder="92" />
+        </view>
+      </view>
+      <view class="form-row">
+        <view class="fl">学期</view>
+        <input class="field mono" value="{{form.term}}" data-key="term" bindinput="onFormInput" placeholder="2026-2027-1" maxlength="20" />
+      </view>
+      <view class="form-tip">按「绩点 =（成绩−50）÷ 10」实时换算：当前 <text class="mono">{{previewPoint}}</text></view>
+      <view class="sheet-ops">
+        <button class="btn primary" bindtap="saveGpa">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

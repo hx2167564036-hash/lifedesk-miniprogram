@@ -1,0 +1,161 @@
+/* 母题：图书馆索引卡 | 与 index / more 同色板 | 2026-10-15 呼吸感重调：加大垂直节奏、拉开信息层级 */
+page {
+  background: #E7E2D6;
+  color: #22201C;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+.page { padding: 40rpx 36rpx 220rpx; }
+
+.card {
+  background: #EFEBE0;
+  border: 1rpx solid #DAD4C6;
+  padding: 36rpx 34rpx;
+  position: relative;
+}
+.card-rule {
+  position: absolute;
+  top: 0; left: 32rpx; right: 32rpx;
+  height: 6rpx;
+  background: #A4332B;
+}
+
+/* ===== 用户卡片 ===== */
+.pc-row { display: flex; align-items: center; margin-top: 20rpx; min-height: 132rpx; }
+.avatar-btn {
+  padding: 0;
+  margin: 0;
+  flex: 0 0 128rpx; /* flex-basis 优先于 width：微信 button 默认 width:100% 会赢类选择器 */
+  width: 128rpx; height: 128rpx;
+  box-sizing: border-box;
+  border-radius: 12rpx; /* 索引卡式方形微圆角 */
+  border: 1rpx solid #22201C;
+  background: #EFEBE0;
+  flex-shrink: 0;
+  line-height: normal;
+  overflow: hidden;
+  transition: transform 140ms cubic-bezier(0.2, 0, 0, 1);
+}
+.avatar-btn::after { border: none; }
+.avatar-btn.hover { transform: scale(0.97); }
+.avatar { width: 126rpx; height: 126rpx; display: block; }
+.avatar-ph {
+  display: flex; align-items: center; justify-content: center;
+  width: 126rpx; height: 126rpx;
+  font-family: Georgia, "Songti SC", "SimSun", serif;
+  font-size: 52rpx;
+  color: #9A917F;
+}
+.p-mid { flex: 1; padding: 0 32rpx; }
+.nick-input {
+  font-size: 34rpx;
+  font-weight: 600;
+  padding: 10rpx 0;
+  border-bottom: 1rpx solid #DAD4C6;
+}
+.p-status { display: flex; align-items: center; margin-top: 22rpx; }
+.dot {
+  width: 10rpx; height: 10rpx;
+  border-radius: 50%;
+  background: #9A917F;
+  margin-right: 12rpx;
+}
+.dot.on { background: #3A5A40; }
+.p-status-text { font-size: 21rpx; color: #6E685C; letter-spacing: 2rpx; }
+
+/* ===== 分区 ===== */
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  border-bottom: 1rpx solid #22201C;
+  padding-bottom: 14rpx;
+  margin-bottom: 20rpx;
+}
+.sec-label { font-size: 20rpx; letter-spacing: 6rpx; color: #6E685C; flex: 1; }
+.sec-count { font-size: 20rpx; color: #6E685C; font-variant-numeric: tabular-nums; }
+
+/* ===== 每日签到 ===== */
+.checkin-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 40rpx;
+}
+.ck-title { font-size: 30rpx; font-weight: 600; letter-spacing: 2rpx; }
+.ck-meta {
+  display: flex;
+  align-items: center;
+  font-size: 22rpx;
+  color: #6E685C;
+  margin-top: 16rpx;
+  font-variant-numeric: tabular-nums;
+}
+.ck-dot { margin: 0 16rpx; }
+.ck-btn {
+  margin: 0;
+  padding: 0 52rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+  background: #A4332B;
+  color: #FDFCF9;
+  border-radius: 4rpx;
+  font-size: 27rpx;
+  letter-spacing: 4rpx;
+  flex-shrink: 0;
+  transition: transform 140ms cubic-bezier(0.2, 0, 0, 1);
+}
+.ck-btn.done { background: #3A5A40; }
+.ck-pressed { transform: scale(0.96); }
+
+/* ===== 统计 ===== */
+.brief-grid { display: flex; padding: 36rpx 0 20rpx; }
+.bg-item { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.bg-num { font-size: 52rpx; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.bg-cap { font-size: 21rpx; color: #9A917F; margin-top: 18rpx; letter-spacing: 2rpx; }
+.uid-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1rpx dashed #DAD4C6;
+  padding-top: 22rpx;
+  font-size: 21rpx;
+}
+.uid-label { color: #6E685C; letter-spacing: 2rpx; }
+.uid-val { color: #9A917F; }
+
+/* ===== 入口 ===== */
+.entry-row {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid #DAD4C6;
+  transition: transform 160ms cubic-bezier(0.2, 0, 0, 1);
+}
+.entry-row:last-child { border-bottom: none; }
+.entry-pressed { transform: scale(0.985); }
+.entry-idx {
+  width: 68rpx;
+  font-size: 22rpx;
+  color: #6E685C;
+  font-variant-numeric: tabular-nums;
+}
+.entry-name { font-size: 28rpx; width: 152rpx; font-weight: 500; }
+.entry-desc { flex: 1; font-size: 21rpx; color: #6E685C; font-variant-numeric: tabular-nums; }
+.entry-arrow { font-size: 26rpx; color: #6E685C; margin-left: 12rpx; }
+
+/* ===== 账号操作 ===== */
+.op-row {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid #DAD4C6;
+}
+.op-row:last-child { border-bottom: none; }
+.op-pressed { background: #F6F2EA; }
+.op-name { font-size: 27rpx; width: 176rpx; font-weight: 500; }
+.op-desc { flex: 1; font-size: 21rpx; color: #9A917F; }
+.op-arrow { font-size: 28rpx; color: #C9C2B4; margin-left: 12rpx; }
+
+/* ===== 卡片间距 ===== */
+.checkin-card, .stats-card, .ops-card { margin-top: 40rpx; }
